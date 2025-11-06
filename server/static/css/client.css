@@ -1,0 +1,253 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #000;
+    color: #fff;
+    overflow: hidden;
+    cursor: default;
+    transition: cursor 0.3s;
+}
+
+#video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#video-player {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid #4CAF50;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#status {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 12px;
+    z-index: 5;
+    transition: opacity 0.5s;
+    opacity: 1;
+}
+
+.status-online {
+    color: #4CAF50;
+}
+
+.status-offline {
+    color: #f44336;
+}
+
+#error-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(244, 67, 54, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    display: none;
+    z-index: 15;
+    max-width: 400px;
+}
+
+#error-message h2 {
+    margin-bottom: 15px;
+}
+
+#error-message button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #fff;
+    color: #f44336;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#error-message button:hover {
+    background: #f0f0f0;
+}
+
+#config-panel {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    z-index: 5;
+    max-width: 320px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+#config-panel h3 {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+#config-panel label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 3px;
+    font-size: 12px;
+    color: #ccc;
+}
+
+#config-panel input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+#config-panel input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+#config-panel button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 13px;
+    transition: background 0.3s;
+}
+
+#config-panel button:hover {
+    background: #45a049;
+}
+
+#config-panel button:nth-child(12) {
+    background: #2196F3;
+    margin-top: 5px;
+}
+
+#config-panel button:nth-child(12):hover {
+    background: #1976D2;
+}
+
+.toggle-config {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 6;
+    font-size: 12px;
+    transition: background 0.3s, opacity 0.5s;
+    opacity: 1;
+}
+
+.toggle-config:hover {
+    background: rgba(50, 50, 50, 0.9);
+}
+
+#info-display {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 11px;
+    z-index: 5;
+    min-width: 250px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.5s;
+    opacity: 1;
+}
+
+#info-display > div {
+    margin-bottom: 8px;
+}
+
+#info-display > div:last-child {
+    margin-bottom: 0;
+}
+
+#info-display strong {
+    color: #4CAF50;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    #config-panel {
+        max-width: calc(100vw - 40px);
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    #info-display {
+        font-size: 10px;
+        padding: 10px;
+        min-width: 200px;
+    }
+    
+    .toggle-config {
+        font-size: 11px;
+        padding: 8px 12px;
+    }
+}

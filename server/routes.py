@@ -192,6 +192,12 @@ def index():
             'timestamp': '/api/timestamp',
             'videos': '/api/videos?latitude=<lat>&longitude=<lon>',
             'download': '/api/download/<video_id>',
+            'client': '/client',
             'admin': '/admin'
         }
     })
+
+@main_bp.route('/client')
+def client_web():
+    """Interface web do cliente"""
+    return render_template('client.html')
