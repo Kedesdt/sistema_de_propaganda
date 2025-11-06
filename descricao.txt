@@ -1,0 +1,10 @@
+um sistema de propagando as onde existe o servidor feito em python e flask e o cliente que consome da api
+o cliente � um programa feito em python que acessa o servidor, baixa os videos e toca em fullscreen
+o servidor tem um a rota que mostra o timestamp da ultima atualiza�ao de videos
+o servidor � feito seguindo as boas praticas, tudo em sua pasta em arquivos separados
+o cliente fica em loop infinito, a cada 5 minutos ele checa se existe uma atualiza�ao no timestamp, se existir ele baixa os novos videos e toca em fullscreen
+se n�o tiver atualiza�ao ele continua tocando em loop os videos ja baixados
+o servidor tem uma pagina de admin protegida por senha onde � possivel fazer upload dos videos novos
+os vider tem a informa�ao de geolocaliza�ao e raio em km, ou seja, cada video � associado a uma localiza�ao geografica
+o cliente tambem tem a informa�ao de geolocaliza�ao, ou seja, ele sabe onde esta localizado se estiver dentro do raio de algum video ele baixa e toca esse video, se tiver mais de um video para a localiza�ao ele baixa e toca todos em loop
+pode usar o flask e todos os submodulos como wtf, sqlalchemy.....
