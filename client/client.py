@@ -5,13 +5,16 @@ import time
 from datetime import datetime
 from config import ClientConfig
 import time
+import sys
 
 
 class PropagandaClient:
-    def __init__(self):
+    def __init__(self, url=None):
         self.config = ClientConfig()
         self.last_timestamp = self.load_last_timestamp()
         self.current_videos = []
+        if url:
+            self.config.SERVER_URL = url
 
     def load_last_timestamp(self):
         """Carrega o último timestamp salvo"""
@@ -242,9 +245,13 @@ class PropagandaClient:
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        url = sys.argv[1]
+    else:
+        url = input("Digite a URL do servidor (ou deixe vazio para padrão): ").strip()
     while True:
         try:
-            client = PropagandaClient()
+            client = PropagandaClient(url=url)
             client.run()
         except Exception as e:
             print(f"[ERRO] Ocorreu um erro: {e}")
