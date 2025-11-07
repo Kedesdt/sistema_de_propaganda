@@ -1,4 +1,6 @@
 from flask import Flask, render_template, jsonify, request
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from config import Config
 from models import db, SystemStatus
 from routes import main_bp, admin_bp, api_bp, cliente_bp
@@ -7,6 +9,13 @@ from logging.handlers import RotatingFileHandler
 import os
 import time
 
+# Inicializar Flask-Limiter
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://"
+)
+
 
 def create_app():
     app = Flask(__name__)
@@ -14,6 +23,9 @@ def create_app():
 
     # Configurar logging diferenciado por ambiente
     configure_logging(app)
+    
+    # Inicializar Rate Limiter
+    limiter.init_app(app)
 
     # Request logging middleware
     @app.before_request
@@ -33,6 +45,14 @@ def create_app():
 
     # Inicializar banco de dados
     db.init_app(app)
+
+    # Inicializar Swagger (API Documentation)
+    try:
+        from swagger_config import init_swagger
+        init_swagger(app)
+        app.logger.info('Swagger/OpenAPI documentation initialized at /api/docs')
+    except ImportError:
+        app.logger.warning('Flasgger not installed. API documentation disabled.')
 
     # Registrar blueprints
     app.register_blueprint(main_bp)
@@ -66,6 +86,16 @@ def create_app():
         if request.path.startswith('/api/'):
             return jsonify({'error': 'Arquivo muito grande'}), 413
         return render_template('errors/413.html'), 413
+    
+    @app.errorhandler(429)
+    def ratelimit_error(error):
+        """Error handler para rate limit exceeded"""
+        if request.path.startswith('/api/'):
+            return jsonify({
+                'error': 'Taxa de requisições excedida',
+                'message': 'Muitas requisições. Tente novamente mais tarde.'
+            }), 429
+        return render_template('errors/429.html'), 429
 
     # Criar tabelas
     with app.app_context():

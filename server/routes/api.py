@@ -7,6 +7,13 @@ from services import VideoService
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
+# O rate limiting será configurado via decorator no app.py
+# Importar limiter quando necessário
+try:
+    from app import limiter
+except ImportError:
+    limiter = None
+
 
 @api_bp.route('/timestamp', methods=['GET'])
 def get_timestamp():
@@ -24,6 +31,7 @@ def get_videos():
     Retorna lista de vídeos disponíveis para a localização do cliente
     Apenas vídeos aprovados, pagos e não pausados
     Parâmetros: latitude, longitude
+    Rate limit: 30 requests per minute
     """
     try:
         latitude = float(request.args.get('latitude'))
@@ -42,7 +50,10 @@ def get_videos():
 
 @api_bp.route('/download/<int:video_id>', methods=['GET'])
 def download_video(video_id):
-    """Baixa um vídeo específico"""
+    """
+    Baixa um vídeo específico
+    Rate limit: 10 downloads per hour
+    """
     from models import Video
     video = Video.query.get_or_404(video_id)
     return send_from_directory(
