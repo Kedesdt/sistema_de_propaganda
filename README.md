@@ -103,7 +103,13 @@ sistema_de_propaganda/
 │   ├── app.py                      # Aplicação Flask
 │   ├── models.py                   # Modelos BD
 │   ├── forms.py                    # Formulários
-│   ├── routes.py                   # Rotas API
+│   ├── routes/                     # **NOVO: Rotas modulares**
+│   │   ├── __init__.py             # Exporta blueprints
+│   │   ├── main.py                 # Rotas principais
+│   │   ├── api.py                  # API REST
+│   │   ├── admin.py                # Área admin
+│   │   ├── cliente.py              # Portal cliente
+│   │   └── README.md               # Documentação
 │   ├── config.py                   # Configurações
 │   ├── utils.py                    # Utilitários
 │   ├── templates/

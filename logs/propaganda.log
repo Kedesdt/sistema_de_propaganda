@@ -1,0 +1,91 @@
+2025-11-07 17:11:27,339 INFO: Sistema de Propaganda iniciado [in C:\Users\kdtorres\Documents\Programacao\sistema_de_propaganda\server\app.py:25]
+2025-11-07 17:11:28,832 INFO: Sistema de Propaganda iniciado [in C:\Users\kdtorres\Documents\Programacao\sistema_de_propaganda\server\app.py:25]
+2025-11-07 17:38:03,571 INFO: Sistema de Propaganda iniciado [in C:\Users\kdtorres\Documents\Programacao\sistema_de_propaganda\server\app.py:25]
+[2025-11-07 17:44:32,839] INFO in app: Sistema de Propaganda iniciado em modo PRODU플O
+[2025-11-07 17:44:34,195] INFO in app: Sistema de Propaganda iniciado em modo PRODU플O
+[2025-11-07 17:44:46,013] INFO in app: GET /api/videos - 200 - 0.004s - IP: 10.13.24.48
+[2025-11-07 17:45:46,012] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:46:46,015] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:47:46,017] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:48:46,019] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:49:46,031] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:50:46,025] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:51:46,027] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:52:46,031] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:53:46,033] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:54:46,035] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:55:46,039] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:56:46,040] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:57:46,044] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:58:46,047] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 17:59:46,056] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:00:46,050] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:01:46,055] INFO in app: GET /api/videos - 200 - 0.002s - IP: 10.13.24.48
+[2025-11-07 18:02:46,057] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:03:46,061] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:04:46,062] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:05:46,064] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:06:46,067] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:07:46,070] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:08:46,072] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:09:46,084] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:10:46,078] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:11:46,080] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:12:46,083] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:13:46,085] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:14:46,089] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:15:46,090] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:16:46,093] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:17:46,096] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:18:46,098] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:19:46,110] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:20:46,103] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:21:46,106] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:22:46,109] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:23:46,111] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:24:46,113] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:25:46,117] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:26:46,119] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:27:46,124] INFO in app: GET /api/videos - 200 - 0.002s - IP: 10.13.24.48
+[2025-11-07 18:28:46,125] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:29:46,136] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:30:46,129] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:31:46,131] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:32:46,135] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:33:46,138] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:34:18,846] INFO in app: Sistema de Propaganda iniciado em modo PRODU플O
+[2025-11-07 18:34:46,143] INFO in app: GET /api/videos - 200 - 0.004s - IP: 10.13.24.48
+[2025-11-07 18:35:09,776] INFO in app: Sistema de Propaganda iniciado em modo PRODU플O
+[2025-11-07 18:35:46,146] INFO in app: GET /api/videos - 200 - 0.004s - IP: 10.13.24.48
+[2025-11-07 18:36:07,828] INFO in app: Sistema de Propaganda iniciado em modo PRODU플O
+[2025-11-07 18:36:46,148] INFO in app: GET /api/videos - 200 - 0.004s - IP: 10.13.24.48
+[2025-11-07 18:37:46,147] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:38:46,150] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:39:46,161] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:40:46,155] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:41:46,158] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:42:46,160] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:42:48,028] INFO in app: Sistema de Propaganda iniciado em modo PRODU플O
+[2025-11-07 18:43:46,166] INFO in app: GET /api/videos - 200 - 0.004s - IP: 10.13.24.48
+[2025-11-07 18:44:46,517] INFO in app: GET /api/videos - 200 - 0.002s - IP: 10.13.24.48
+[2025-11-07 18:45:46,168] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:46:46,171] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:47:46,173] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:48:46,176] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:49:46,187] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:50:46,181] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:51:46,184] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:52:46,185] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:53:46,188] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:54:46,191] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:55:46,193] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:56:46,195] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:57:46,198] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:58:46,201] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 18:59:46,213] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 19:00:46,206] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 19:01:46,209] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 19:02:46,211] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 19:03:46,214] INFO in app: GET /api/videos - 200 - 0.002s - IP: 10.13.24.48
+[2025-11-07 19:04:46,217] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
+[2025-11-07 19:05:46,218] INFO in app: GET /api/videos - 200 - 0.001s - IP: 10.13.24.48
