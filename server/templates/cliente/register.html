@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastro - Portal do Cliente{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">📝 Cadastro de Cliente</h3>
+                
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.nome.label(class="form-label") }}
+                        {{ form.nome(class="form-control", placeholder="João da Silva") }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control", placeholder="seu@email.com") }}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.telefone.label(class="form-label") }}
+                            {{ form.telefone(class="form-control", placeholder="(11) 99999-9999") }}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            {{ form.cpf_cnpj.label(class="form-label") }}
+                            {{ form.cpf_cnpj(class="form-control", placeholder="000.000.000-00") }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.senha.label(class="form-label") }}
+                        {{ form.senha(class="form-control", placeholder="Mínimo 6 caracteres") }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.confirmar_senha.label(class="form-label") }}
+                        {{ form.confirmar_senha(class="form-control", placeholder="Digite a senha novamente") }}
+                    </div>
+                    
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-success") }}
+                    </div>
+                </form>
+                
+                <hr>
+                
+                <p class="text-center mb-0">
+                    Já tem uma conta? 
+                    <a href="{{ url_for('cliente.login') }}">Faça login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

@@ -1,216 +1,219 @@
 # Sistema de Propaganda com Geolocalização
 
-Sistema completo de propaganda digital baseado em localização geográfica, composto por servidor Flask e cliente Python.
+Sistema completo de exibição de vídeos publicitários baseado em geolocalização, com portal para clientes, sistema de créditos prepagos e aprovação administrativa.
 
-## 📋 Características
+## 🚀 Funcionalidades
 
-- **Servidor Flask**:
-  - API REST para gerenciamento de vídeos
-  - Painel administrativo protegido por senha
-  - Upload de vídeos com geolocalização (latitude, longitude e raio)
-  - Banco de dados SQLite com SQLAlchemy
-  - Sistema de timestamp para sincronização
+### Para Administradores
+- ✅ Upload de vídeos com localização e raio de exibição
+- ✅ Aprovação/reprovação de vídeos enviados por clientes
+- ✅ Gerenciamento de pagamentos
+- ✅ Adição de créditos aos vídeos
+- ✅ Pausar/retomar exibição de vídeos
+- ✅ Visualização de estatísticas detalhadas
+- ✅ Exclusão de vídeos
 
-- **Cliente Python**:
-  - Verifica atualizações a cada 5 minutos
-  - Baixa automaticamente vídeos disponíveis para sua localização
-  - Reproduz vídeos em fullscreen em loop
-  - Usa OpenCV para reprodução de vídeo
+### Para Clientes
+- ✅ Registro e login no sistema
+- ✅ Upload de vídeos para aprovação
+- ✅ Visualização de status (aprovado/pago/pausado)
+- ✅ Acompanhamento de créditos restantes
+- ✅ Estatísticas de visualizações por vídeo
+- ✅ Dashboard pessoal
 
-## 🚀 Instalação
+### Para Visualizadores (Web Client)
+- ✅ Exibição automática de vídeos baseada em localização
+- ✅ Interface fullscreen com controles auto-hide
+- ✅ Reprodução sequencial em loop
+- ✅ Download inteligente (apenas novos vídeos)
+- ✅ Detecção automática de GPS
 
-### 1. Instalar dependências
+## 📋 Requisitos
 
-```powershell
+- Python 3.7+
+- Navegador moderno com suporte a geolocalização
+- Conexão com a internet
+
+## 🔧 Instalação
+
+1. **Instale as dependências:**
+```bash
 pip install -r requirements.txt
 ```
 
-### 2. Configurar o Servidor
+2. **Configure as variáveis de ambiente (opcional):**
 
-Edite o arquivo `server/.env`:
-
+Crie um arquivo `.env` na pasta `server/`:
 ```env
-SECRET_KEY=sua-chave-secreta-segura
-ADMIN_PASSWORD=sua-senha-admin
-DATABASE_URI=sqlite:///propaganda.db
-UPLOAD_FOLDER=uploads
+SECRET_KEY=sua_chave_secreta_aqui
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=senha_admin
 ```
 
-### 3. Configurar o Cliente
-
-Edite o arquivo `client/.env`:
-
-```env
-SERVER_URL=http://localhost:5000
-CLIENT_LATITUDE=-23.5505
-CLIENT_LONGITUDE=-46.6333
-CHECK_INTERVAL=300
-```
-
-**Importante**: Ajuste as coordenadas (CLIENT_LATITUDE e CLIENT_LONGITUDE) para a localização real onde o cliente será executado.
-
-## 🎯 Como Usar
-
-### Iniciar o Servidor
-
-```powershell
+3. **Inicie o servidor:**
+```bash
 cd server
 python app.py
 ```
 
-O servidor estará disponível em: http://localhost:5000
+O servidor estará disponível em: `http://localhost:5050`
 
-### Acessar o Admin
+## 📱 Uso
 
-1. Acesse: http://localhost:5000/admin/login
-2. Use a senha configurada no `.env` (padrão: `admin123`)
-3. Faça upload de vídeos com suas respectivas localizações
+### Acesso Admin
+1. Acesse: `http://localhost:5050/admin/login`
+2. Login padrão: `admin` / `admin123`
+3. Gerencie vídeos e clientes pelo dashboard
 
-### Iniciar o Cliente
+### Portal do Cliente
+1. Acesse: `http://localhost:5050/cliente/register`
+2. Registre-se com seus dados
+3. Faça login em: `http://localhost:5050/cliente/login`
+4. Upload de vídeos e acompanhe status
 
-```powershell
-cd client
-python client.py
-```
+### Web Client (Visualizador)
+1. Acesse: `http://localhost:5050/client`
+2. Clique em "Configurações"
+3. Configure localização (ou use GPS)
+4. Salve e aguarde os vídeos
 
-O cliente irá:
-1. Verificar vídeos disponíveis para sua localização
-2. Baixar os vídeos necessários
-3. Reproduzir em loop fullscreen
-4. Verificar atualizações a cada 5 minutos
+## 🎯 Sistema de Créditos
 
-**Controles durante reprodução**:
-- `q` - Sair do cliente
-- `s` - Pular vídeo atual
+### Fluxo Completo
+1. **Upload**: Cliente envia vídeo → status: pendente
+2. **Aprovação**: Admin aprova → status: aprovado
+3. **Pagamento**: Admin marca como pago → status: pago
+4. **Créditos**: Admin adiciona créditos (1 crédito = 1 visualização)
+5. **Exibição**: Vídeo entra em exibição automaticamente
+6. **Consumo**: Cada visualização consome 1 crédito
+7. **Pausa Automática**: Sem créditos → vídeo pausado
 
-## 🗺️ Sistema de Geolocalização
+### Estados do Vídeo
+- **⏳ Pendente**: Aguardando aprovação
+- **✓ Aprovado**: Aprovado pelo admin
+- **💰 Pago**: Pagamento confirmado
+- **▶️ Ativo**: Sendo exibido (créditos > 0)
+- **⏸ Pausado**: Sem créditos ou pausado manualmente
 
-Cada vídeo possui:
-- **Latitude**: Coordenada geográfica (-90 a 90)
-- **Longitude**: Coordenada geográfica (-180 a 180)
-- **Raio (km)**: Distância em quilômetros a partir do ponto central
-
-O cliente só baixa e reproduz vídeos que estão dentro do raio de sua localização.
-
-### Exemplo
-
-Se um vídeo está configurado para:
-- Latitude: -23.5505
-- Longitude: -46.6333
-- Raio: 10 km
-
-Apenas clientes localizados dentro de um raio de 10 km desse ponto irão reproduzir o vídeo.
-
-## 📁 Estrutura do Projeto
+## 🗂️ Estrutura do Projeto
 
 ```
 sistema_de_propaganda/
 ├── server/
-│   ├── app.py              # Aplicação principal Flask
-│   ├── config.py           # Configurações
-│   ├── models.py           # Modelos do banco de dados
-│   ├── routes.py           # Rotas da API e Admin
-│   ├── forms.py            # Formulários WTForms
-│   ├── utils.py            # Funções auxiliares
-│   ├── .env                # Variáveis de ambiente
+│   ├── app.py                      # Aplicação Flask
+│   ├── models.py                   # Modelos BD
+│   ├── forms.py                    # Formulários
+│   ├── routes.py                   # Rotas API
+│   ├── config.py                   # Configurações
+│   ├── utils.py                    # Utilitários
 │   ├── templates/
-│   │   ├── admin.html      # Dashboard admin
-│   │   └── login.html      # Página de login
-│   └── uploads/            # Vídeos armazenados
-│
-├── client/
-│   ├── client.py           # Cliente principal
-│   ├── config.py           # Configurações do cliente
-│   ├── .env                # Variáveis de ambiente
-│   └── videos/             # Vídeos baixados
-│
-├── requirements.txt        # Dependências Python
-└── README.md              # Este arquivo
+│   │   ├── admin.html              # Dashboard admin
+│   │   ├── admin_login.html        # Login admin
+│   │   ├── client.html             # Web client
+│   │   └── cliente/
+│   │       ├── login.html          # Login cliente
+│   │       ├── register.html       # Registro
+│   │       ├── dashboard.html      # Dashboard
+│   │       └── video_stats.html    # Estatísticas
+│   ├── static/
+│   │   ├── css/
+│   │   │   └── client.css
+│   │   └── js/
+│   │       └── client.js           # Lógica web client
+│   └── uploads/                    # Vídeos
+├── requirements.txt
+└── README.md
 ```
 
-## 🔧 API Endpoints
+## 🔐 API Endpoints
 
 ### Públicos
+- `GET /api/videos` - Lista vídeos por localização
+- `GET /api/download/<video_id>` - Download do vídeo
+- `POST /api/visualizacao/<video_id>` - Registra visualização
 
-- `GET /` - Informações da API
-- `GET /api/timestamp` - Retorna timestamp da última atualização
-- `GET /api/videos?latitude=X&longitude=Y` - Lista vídeos disponíveis
-- `GET /api/download/<video_id>` - Baixa um vídeo específico
+### Admin (autenticação necessária)
+- `POST /admin/upload` - Upload de vídeo
+- `POST /admin/delete/<video_id>` - Deletar
+- `POST /admin/aprovar/<video_id>` - Aprovar
+- `POST /admin/reprovar/<video_id>` - Reprovar
+- `POST /admin/marcar-pago/<video_id>` - Marcar pago
+- `POST /admin/adicionar-creditos/<video_id>` - Adicionar créditos
+- `POST /admin/pausar/<video_id>` - Pausar/retomar
 
-### Admin (Requer autenticação)
+### Cliente (autenticação necessária)
+- `POST /cliente/login` - Login
+- `POST /cliente/register` - Registro
+- `GET /cliente/dashboard` - Dashboard
+- `POST /cliente/upload` - Upload vídeo
+- `GET /cliente/video/<video_id>/stats` - Estatísticas
 
-- `GET /admin/login` - Página de login
-- `GET /admin/` - Dashboard admin
-- `POST /admin/upload` - Upload de novo vídeo
-- `POST /admin/delete/<video_id>` - Deletar vídeo
-- `GET /admin/logout` - Logout
+## 📊 Banco de Dados
 
-## 🛠️ Tecnologias Utilizadas
+### Tabelas
+- **system_status**: Status do sistema
+- **clientes**: Dados dos clientes
+- **videos**: Informações dos vídeos
+- **logs_visualizacao**: Registro de visualizações
 
-### Servidor
-- Flask - Framework web
-- SQLAlchemy - ORM para banco de dados
-- WTForms - Validação de formulários
-- GeoPy - Cálculos de geolocalização
-- Bootstrap 5 - Interface administrativa
+### Campos Principais - Video
+- `aprovado`: Aprovado pelo admin (boolean)
+- `pago`: Pagamento confirmado (boolean)
+- `creditos`: Créditos disponíveis (integer)
+- `pausado`: Vídeo pausado (boolean)
+- `visualizacoes`: Total de views (integer)
+- `cliente_id`: FK para clientes (NULL = admin)
 
-### Cliente
-- Requests - Requisições HTTP
-- OpenCV (cv2) - Reprodução de vídeo
-- Python-dotenv - Gerenciamento de variáveis de ambiente
+## 🛠️ Tecnologias
 
-## 📝 Formatos de Vídeo Suportados
+- **Flask 3.0.0** - Framework web
+- **SQLAlchemy 3.1.1** - ORM
+- **Flask-WTF 1.2.1** - Formulários
+- **GeoPy 2.4.1** - Geolocalização
+- **Werkzeug 3.0.1** - Segurança
+- **Bootstrap 5.3.0** - UI
+- **OpenCV 4.10.0.84** - Vídeo (client desktop)
+- **NumPy <2** - Compatibilidade
 
-- MP4
-- AVI
-- MOV
-- MKV
-- WEBM
+## 🔒 Segurança
 
-## ⚙️ Configurações Avançadas
+- Senhas com hash (Werkzeug)
+- Sessões Flask
+- CSRF protection
+- Validação de uploads
+- Sanitização de inputs
 
-### Alterar intervalo de verificação
+## 🐛 Troubleshooting
 
-No arquivo `client/.env`, ajuste:
-```env
-CHECK_INTERVAL=300  # Segundos (300 = 5 minutos)
+### NumPy Error
+```bash
+pip install "numpy<2"
 ```
 
-### Aumentar limite de upload
+### Geolocation Denied
+Habilite permissões no navegador
 
-No arquivo `server/config.py`:
-```python
-MAX_CONTENT_LENGTH = 500 * 1024 * 1024  # 500 MB
-```
+### Vídeos Não Aparecem
+Verifique:
+1. ✓ Aprovado?
+2. ✓ Pago?
+3. ✓ Créditos > 0?
+4. ✓ Não pausado?
+5. ✓ Dentro do raio?
 
-### Usar banco de dados externo
+### BD Corrompido
+Delete `propaganda.db` e reinicie
 
-No arquivo `server/.env`:
-```env
-DATABASE_URI=postgresql://user:pass@localhost/dbname
-```
+## 📈 Recursos Futuros
 
-## 🐛 Solução de Problemas
-
-### Servidor não inicia
-- Verifique se a porta 5000 está disponível
-- Confirme se todas as dependências foram instaladas
-- Verifique logs de erro no console
-
-### Cliente não baixa vídeos
-- Confirme que o servidor está rodando
-- Verifique se as coordenadas estão corretas
-- Confirme que existem vídeos cadastrados no raio da localização
-
-### Vídeos não reproduzem
-- Verifique se o OpenCV está instalado corretamente
-- Confirme que os arquivos de vídeo não estão corrompidos
-- Teste com diferentes formatos de vídeo
+- [ ] Relatórios PDF
+- [ ] Gráficos de visualização
+- [ ] Gateway de pagamento
+- [ ] Notificações email
+- [ ] App mobile
+- [ ] Sistema de cupons
+- [ ] Multi-idiomas
 
 ## 📄 Licença
 
-Este projeto é de código aberto para fins educacionais.
-
-## 👤 Autor
-
-Desenvolvido como sistema de propaganda digital com geolocalização.
+Projeto proprietário. Todos os direitos reservados.

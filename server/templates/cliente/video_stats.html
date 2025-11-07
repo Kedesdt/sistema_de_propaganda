@@ -1,0 +1,118 @@
+{% extends "base_cliente.html" %}
+
+{% block title %}Estatísticas - {{ video.original_filename }}{% endblock %}
+
+{% block content %}
+<!-- Informações do Vídeo -->
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-camera-video"></i> {{ video.original_filename }}</h5>
+        
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body text-center">
+                                <h3>{{ video.visualizacoes }}</h3>
+                                <p class="mb-0">Visualizações</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="card {% if video.creditos == 0 %}bg-danger{% elif video.creditos < 10 %}bg-warning{% else %}bg-success{% endif %} text-white">
+                            <div class="card-body text-center">
+                                <h3>{{ video.creditos }}</h3>
+                                <p class="mb-0">Créditos Restantes</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="card {% if video.pausado %}bg-danger{% else %}bg-success{% endif %} text-white">
+                            <div class="card-body text-center">
+                                <h3>{% if video.pausado %}⏸{% else %}▶️{% endif %}</h3>
+                                <p class="mb-0">{% if video.pausado %}Pausado{% else %}Ativo{% endif %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="card bg-info text-white">
+                            <div class="card-body text-center">
+                                <h3>{{ video.radius_km }}km</h3>
+                                <p class="mb-0">Raio de Exibição</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <p><strong>Localização Central:</strong></p>
+                        <p>Latitude: {{ "%.6f"|format(video.latitude) }}</p>
+                        <p>Longitude: {{ "%.6f"|format(video.longitude) }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Status:</strong></p>
+                        <p>
+                            {% if video.aprovado %}
+                                <span class="badge bg-success">Aprovado</span>
+                            {% else %}
+                                <span class="badge bg-warning">Pendente Aprovação</span>
+                            {% endif %}
+                            
+                            {% if video.pago %}
+                                <span class="badge bg-info">Pago</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Não Pago</span>
+                            {% endif %}
+                        </p>
+                        <p><strong>Upload em:</strong> {{ video.uploaded_at.strftime('%d/%m/%Y às %H:%M') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Logs de Visualização -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-clock-history"></i> Histórico de Visualizações (Últimas 100)</h5>
+                
+                {% if logs %}
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Data/Hora</th>
+                                    <th>IP do Cliente</th>
+                                    <th>Localização</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in logs %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ log.visualizado_em.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                                        <td>{{ log.client_ip or 'N/A' }}</td>
+                                        <td>
+                                            {% if log.client_latitude and log.client_longitude %}
+                                                {{ "%.4f"|format(log.client_latitude) }}, 
+                                                {{ "%.4f"|format(log.client_longitude) }}
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> Nenhuma visualização registrada ainda.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+{% endblock %}

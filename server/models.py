@@ -3,6 +3,33 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+class Cliente(db.Model):
+    __tablename__ = 'clientes'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    telefone = db.Column(db.String(50))
+    cpf_cnpj = db.Column(db.String(20), unique=True)
+    senha = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relacionamento com vídeos
+    videos = db.relationship('Video', backref='cliente', lazy=True)
+    
+    def __repr__(self):
+        return f'<Cliente {self.nome}>'
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'nome': self.nome,
+            'email': self.email,
+            'telefone': self.telefone,
+            'cpf_cnpj': self.cpf_cnpj,
+            'created_at': self.created_at.isoformat()
+        }
+
 class Video(db.Model):
     __tablename__ = 'videos'
     
@@ -13,6 +40,17 @@ class Video(db.Model):
     longitude = db.Column(db.Float, nullable=False)
     radius_km = db.Column(db.Float, nullable=False)
     uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Novos campos
+    cliente_id = db.Column(db.Integer, db.ForeignKey('clientes.id'), nullable=True)
+    aprovado = db.Column(db.Boolean, default=False, nullable=False)
+    pago = db.Column(db.Boolean, default=False, nullable=False)
+    creditos = db.Column(db.Integer, default=0, nullable=False)
+    pausado = db.Column(db.Boolean, default=False, nullable=False)
+    visualizacoes = db.Column(db.Integer, default=0, nullable=False)
+    
+    # Relacionamento com visualizações
+    logs_visualizacao = db.relationship('LogVisualizacao', backref='video', lazy=True, cascade='all, delete-orphan')
     
     def __repr__(self):
         return f'<Video {self.filename}>'
@@ -25,8 +63,43 @@ class Video(db.Model):
             'latitude': self.latitude,
             'longitude': self.longitude,
             'radius_km': self.radius_km,
-            'uploaded_at': self.uploaded_at.isoformat()
+            'uploaded_at': self.uploaded_at.isoformat(),
+            'cliente_id': self.cliente_id,
+            'aprovado': self.aprovado,
+            'pago': self.pago,
+            'creditos': self.creditos,
+            'pausado': self.pausado,
+            'visualizacoes': self.visualizacoes
         }
+    
+    def consumir_credito(self):
+        """Consome 1 crédito e pausa se acabar"""
+        if self.creditos > 0:
+            self.creditos -= 1
+            self.visualizacoes += 1
+            if self.creditos == 0:
+                self.pausado = True
+            return True
+        return False
+    
+    def adicionar_creditos(self, quantidade):
+        """Adiciona créditos e despausa se necessário"""
+        self.creditos += quantidade
+        if self.creditos > 0:
+            self.pausado = False
+
+class LogVisualizacao(db.Model):
+    __tablename__ = 'logs_visualizacao'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    video_id = db.Column(db.Integer, db.ForeignKey('videos.id'), nullable=False)
+    client_ip = db.Column(db.String(50))
+    client_latitude = db.Column(db.Float)
+    client_longitude = db.Column(db.Float)
+    visualizado_em = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<LogVisualizacao video_id={self.video_id} em {self.visualizado_em}>'
 
 class SystemStatus(db.Model):
     __tablename__ = 'system_status'

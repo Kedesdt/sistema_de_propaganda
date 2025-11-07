@@ -1,0 +1,145 @@
+{% extends "base_cliente.html" %}
+
+{% block title %}Dashboard - Portal do Cliente{% endblock %}
+
+{% block content %}
+<!-- Informações do Cliente -->
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-person-circle"></i> Meus Dados</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <p class="mb-1"><strong>Nome:</strong> {{ cliente.nome }}</p>
+                <p class="mb-1"><strong>Email:</strong> {{ cliente.email }}</p>
+            </div>
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Telefone:</strong> {{ cliente.telefone or 'Não informado' }}</p>
+                        <p class="mb-1"><strong>CPF/CNPJ:</strong> {{ cliente.cpf_cnpj or 'Não informado' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Formulário de Upload -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-cloud-upload"></i> Enviar Novo Vídeo</h5>
+                <p class="text-muted">Envie seu vídeo para aprovação do admin. Após aprovado e pago, adicione créditos para começar a veicular.</p>
+                
+                <form method="POST" action="{{ url_for('cliente.upload_video') }}" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.video.label(class="form-label") }}
+                            {{ form.video(class="form-control") }}
+                            <small class="text-muted">Formatos: MP4, AVI, MOV, MKV, WEBM</small>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            {{ form.radius_km.label(class="form-label") }}
+                            {{ form.radius_km(class="form-control", placeholder="Ex: 5.0") }}
+                            <small class="text-muted">Raio de exibição em quilômetros</small>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.latitude.label(class="form-label") }}
+                            {{ form.latitude(class="form-control", placeholder="Ex: -23.5505") }}
+                            <small class="text-muted">Entre -90 e 90</small>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            {{ form.longitude.label(class="form-label") }}
+                            {{ form.longitude(class="form-control", placeholder="Ex: -46.6333") }}
+                            <small class="text-muted">Entre -180 e 180</small>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-upload"></i> {{ form.submit.label.text }}
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Lista de Vídeos -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-film"></i> Meus Vídeos</h5>
+                
+                {% if videos %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Vídeo</th>
+                                    <th>Localização</th>
+                                    <th>Status</th>
+                                    <th>Créditos</th>
+                                    <th>Visualizações</th>
+                                    <th>Data Upload</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for video in videos %}
+                                    <tr>
+                                        <td>
+                                            <i class="bi bi-camera-video"></i>
+                                            {{ video.original_filename }}
+                                        </td>
+                                        <td>
+                                            <small>
+                                                {{ "%.4f"|format(video.latitude) }}, 
+                                                {{ "%.4f"|format(video.longitude) }}<br>
+                                                Raio: {{ video.radius_km }} km
+                                            </small>
+                                        </td>
+                                        <td>
+                                            {% if video.aprovado %}
+                                                <span class="badge bg-success">✓ Aprovado</span>
+                                            {% else %}
+                                                <span class="badge bg-warning">⏳ Pendente</span>
+                                            {% endif %}
+                                            
+                                            {% if video.pago %}
+                                                <span class="badge bg-info">💰 Pago</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">💳 Não Pago</span>
+                                            {% endif %}
+                                            
+                                            {% if video.pausado %}
+                                                <span class="badge bg-danger">⏸ Pausado</span>
+                                            {% else %}
+                                                <span class="badge bg-success">▶️ Ativo</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <strong class="{% if video.creditos == 0 %}text-danger{% elif video.creditos < 10 %}text-warning{% else %}text-success{% endif %}">
+                                                {{ video.creditos }}
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong>{{ video.visualizacoes }}</strong>
+                                        </td>
+                                        <td>{{ video.uploaded_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                                        <td>
+                                            <a href="{{ url_for('cliente.video_stats', video_id=video.id) }}" class="btn btn-sm btn-info">
+                                                <i class="bi bi-bar-chart"></i> Stats
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> Você ainda não enviou nenhum vídeo.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+{% endblock %}

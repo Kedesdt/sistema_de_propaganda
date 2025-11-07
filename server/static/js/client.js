@@ -439,14 +439,50 @@ function playVideoAtIndex(index) {
     if (playPromise !== undefined) {
         playPromise.then(() => {
             console.log('✅ Vídeo reproduzindo');
+            // Registrar visualização no servidor
+            registerVisualization(videoData.id);
         }).catch((error) => {
             console.warn('⚠️ Autoplay bloqueado, clique na tela para iniciar:', error);
             // Adicionar evento de clique para iniciar reprodução
             document.body.addEventListener('click', function playOnClick() {
-                videoPlayer.play();
+                videoPlayer.play().then(() => {
+                    // Registrar visualização após o play manual
+                    registerVisualization(videoData.id);
+                });
                 document.body.removeEventListener('click', playOnClick);
             }, { once: true });
         });
+    }
+}
+
+// Registrar visualização no servidor (consome crédito)
+async function registerVisualization(videoId) {
+    try {
+        const url = `${config.serverUrl}/api/visualizacao/${videoId}`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                latitude: config.latitude,
+                longitude: config.longitude
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log(`📊 Visualização registrada - Créditos restantes: ${data.creditos_restantes}`);
+        
+        // Se o vídeo ficou sem créditos, será pausado automaticamente
+        // Na próxima verificação, ele não aparecerá mais na lista
+        
+    } catch (error) {
+        console.error('❌ Erro ao registrar visualização:', error);
+        // Não mostrar erro ao usuário, apenas logar
     }
 }
 
