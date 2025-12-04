@@ -35,6 +35,11 @@
                     </div>
                     
                     <div class="mb-3">
+                        {{ form.endereco.label(class="form-label") }}
+                        {{ form.endereco(class="form-control", rows=3, placeholder="Rua, Número, Bairro, Cidade - UF") }}
+                    </div>
+                    
+                    <div class="mb-3">
                         {{ form.senha.label(class="form-label") }}
                         {{ form.senha(class="form-control", placeholder="Mínimo 6 caracteres") }}
                     </div>

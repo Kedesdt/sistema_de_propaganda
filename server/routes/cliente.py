@@ -37,6 +37,21 @@ def register():
         return redirect(url_for('cliente.dashboard'))
     
     form = ClienteRegisterForm()
+    
+    # Debug: Log dados recebidos do POST
+    if request.method == 'POST':
+        from flask import current_app
+        current_app.logger.info(f'POST data recebido: {dict(request.form)}')
+        current_app.logger.info(f'Form data após parse: nome={form.nome.data}, email={form.email.data}, endereco={form.endereco.data}')
+    
+    # Debug: Log erros de validação
+    if request.method == 'POST' and not form.validate_on_submit():
+        from flask import current_app
+        current_app.logger.warning(f'Erros de validação no registro: {form.errors}')
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'{field}: {error}', 'danger')
+    
     if form.validate_on_submit():
         cliente, error = ClienteService.registrar_cliente(
             nome=form.nome.data,
