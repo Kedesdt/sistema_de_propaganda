@@ -4,7 +4,6 @@ Serviço para gerenciamento de clientes
 
 from models import db, Cliente, Video, LogVisualizacao
 from flask import current_app
-from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class ClienteService:
