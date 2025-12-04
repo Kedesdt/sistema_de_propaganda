@@ -48,3 +48,4 @@ client/last_timestamp.txt
 .DS_Store
 Thumbs.db
 .vs/
+logs/

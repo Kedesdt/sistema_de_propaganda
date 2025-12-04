@@ -62,6 +62,7 @@ class VideoService:
             # Criar registro no banco
             video = Video(
                 filename=filename,
+                original_filename=file.filename,
                 latitude=latitude,
                 longitude=longitude,
                 radius_km=radius_km,
