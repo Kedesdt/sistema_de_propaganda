@@ -26,6 +26,13 @@ def cliente_required(f):
     """
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        cliente_id = session.get('cliente_id')
+        # DEBUG TEMPORÁRIO
+        from flask import current_app
+        current_app.logger.warning(f'[DEBUG] @cliente_required - session.get(cliente_id) = {cliente_id!r} (type: {type(cliente_id).__name__})')
+        current_app.logger.warning(f'[DEBUG] @cliente_required - bool(cliente_id) = {bool(cliente_id)}')
+        current_app.logger.warning(f'[DEBUG] @cliente_required - session completa = {dict(session)}')
+        
         if not session.get('cliente_id'):
             flash('Você precisa estar logado para acessar esta página.', 'warning')
             return redirect(url_for('cliente.login'))

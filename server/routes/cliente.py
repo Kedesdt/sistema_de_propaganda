@@ -13,13 +13,22 @@ cliente_bp = Blueprint('cliente', __name__, url_prefix='/cliente')
 @cliente_bp.route('/login', methods=['GET', 'POST'])
 def login():
     """Login do cliente"""
+    # DEBUG TEMPORÁRIO
+    from flask import current_app
+    cliente_id = session.get('cliente_id')
+    current_app.logger.warning(f'[DEBUG] /login - session.get(cliente_id) = {cliente_id!r} (type: {type(cliente_id).__name__})')
+    current_app.logger.warning(f'[DEBUG] /login - bool(cliente_id) = {bool(cliente_id)}')
+    current_app.logger.warning(f'[DEBUG] /login - session completa = {dict(session)}')
+    
     if session.get('cliente_id'):
+        current_app.logger.warning(f'[DEBUG] /login - Redirecionando para dashboard')
         return redirect(url_for('cliente.dashboard'))
     
     form = ClienteLoginForm()
     if form.validate_on_submit():
         cliente = ClienteService.autenticar_cliente(form.email.data, form.senha.data)
         if cliente:
+            current_app.logger.warning(f'[DEBUG] /login - Autenticação OK, salvando na sessão: cliente.id={cliente.id!r}')
             session['cliente_id'] = cliente.id
             session['cliente_nome'] = cliente.nome
             flash('Login realizado com sucesso!', 'success')

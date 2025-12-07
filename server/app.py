@@ -1,3 +1,50 @@
+import os
+import sys
+
+# CRÍTICO: Limpar TODAS as variáveis PostgreSQL ANTES de qualquer import
+# Isso evita que psycopg2 leia arquivos de configuração com encoding errado
+pg_vars_to_clear = [
+    "PGAPPNAME",
+    "PGCONNECT_TIMEOUT",
+    "PGDATABASE",
+    "PGDATESTYLE",
+    "PGGSSLIB",
+    "PGHOST",
+    "PGHOSTADDR",
+    "PGKRBSRVNAME",
+    "PGLOCALEDIR",
+    "PGOPTIONS",
+    "PGPASSFILE",
+    "PGPASSWORD",
+    "PGPORT",
+    "PGSERVICE",
+    "PGSERVICEFILE",
+    "PGSSL",
+    "PGSSLCERT",
+    "PGSSLCOMPRESSION",
+    "PGSSLCRL",
+    "PGSSLKEY",
+    "PGSSLMODE",
+    "PGSSLROOTCERT",
+    "PGSYSCONFDIR",
+    "PGTARGETSESSIONATTRS",
+    "PGTZ",
+    "PGUSER",
+    "PGGEQO",
+]
+for var in pg_vars_to_clear:
+    if var in os.environ:
+        del os.environ[var]
+
+# Definir apenas o necessário para UTF-8
+os.environ["PYTHONIOENCODING"] = "utf-8"
+os.environ["PGCLIENTENCODING"] = "UTF8"
+os.environ["LC_MESSAGES"] = "C"
+os.environ["LC_ALL"] = "C"
+os.environ["LANG"] = "C"
+os.environ["LANGUAGE"] = "en_US:en"
+
+# Agora sim, importar Flask e outras dependências
 from flask import Flask, render_template, jsonify, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -6,14 +53,13 @@ from models import db, SystemStatus
 from routes import main_bp, admin_bp, api_bp, cliente_bp
 import logging
 from logging.handlers import RotatingFileHandler
-import os
 import time
 
 # Inicializar Flask-Limiter
 limiter = Limiter(
     key_func=get_remote_address,
     default_limits=["200 per day", "50 per hour"],
-    storage_uri="memory://"
+    storage_uri="memory://",
 )
 
 
@@ -21,9 +67,14 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    # DEBUG TEMPORÁRIO - Verificar configuração de sessão
+    app.logger.warning(f'[DEBUG] Configuração de SECRET_KEY: {app.config.get("SECRET_KEY")[:10]}...')
+    app.logger.warning(f'[DEBUG] Configuração de SESSION_TYPE: {app.config.get("SESSION_TYPE", "filesystem (padrão)")}')
+    app.logger.warning(f'[DEBUG] Configuração de PERMANENT_SESSION_LIFETIME: {app.config.get("PERMANENT_SESSION_LIFETIME", "31 dias (padrão)")}')
+
     # Configurar logging diferenciado por ambiente
     configure_logging(app)
-    
+
     # Inicializar Rate Limiter
     limiter.init_app(app)
 
@@ -32,14 +83,14 @@ def create_app():
     def log_request():
         """Log de todas as requisições"""
         request.start_time = time.time()
-    
+
     @app.after_request
     def log_response(response):
         """Log de todas as respostas com tempo de processamento"""
-        if hasattr(request, 'start_time'):
+        if hasattr(request, "start_time"):
             duration = time.time() - request.start_time
             app.logger.info(
-                f'{request.method} {request.path} - {response.status_code} - {duration:.3f}s - IP: {request.remote_addr}'
+                f"{request.method} {request.path} - {response.status_code} - {duration:.3f}s - IP: {request.remote_addr}"
             )
         return response
 
@@ -49,10 +100,11 @@ def create_app():
     # Inicializar Swagger (API Documentation)
     try:
         from swagger_config import init_swagger
+
         init_swagger(app)
-        app.logger.info('Swagger/OpenAPI documentation initialized at /api/docs')
+        app.logger.info("Swagger/OpenAPI documentation initialized at /api/docs")
     except ImportError:
-        app.logger.warning('Flasgger not installed. API documentation disabled.')
+        app.logger.warning("Flasgger not installed. API documentation disabled.")
 
     # Registrar blueprints
     app.register_blueprint(main_bp)
@@ -63,39 +115,44 @@ def create_app():
     # Error Handlers
     @app.errorhandler(404)
     def not_found_error(error):
-        if request.path.startswith('/api/'):
-            return jsonify({'error': 'Recurso não encontrado'}), 404
-        return render_template('errors/404.html'), 404
+        if request.path.startswith("/api/"):
+            return jsonify({"error": "Recurso não encontrado"}), 404
+        return render_template("errors/404.html"), 404
 
     @app.errorhandler(500)
     def internal_error(error):
         db.session.rollback()
-        app.logger.error(f'Erro interno: {error}', exc_info=True)
-        if request.path.startswith('/api/'):
-            return jsonify({'error': 'Erro interno do servidor'}), 500
-        return render_template('errors/500.html'), 500
+        app.logger.error(f"Erro interno: {error}", exc_info=True)
+        if request.path.startswith("/api/"):
+            return jsonify({"error": "Erro interno do servidor"}), 500
+        return render_template("errors/500.html"), 500
 
     @app.errorhandler(403)
     def forbidden_error(error):
-        if request.path.startswith('/api/'):
-            return jsonify({'error': 'Acesso negado'}), 403
-        return render_template('errors/403.html'), 403
+        if request.path.startswith("/api/"):
+            return jsonify({"error": "Acesso negado"}), 403
+        return render_template("errors/403.html"), 403
 
     @app.errorhandler(413)
     def too_large_error(error):
-        if request.path.startswith('/api/'):
-            return jsonify({'error': 'Arquivo muito grande'}), 413
-        return render_template('errors/413.html'), 413
-    
+        if request.path.startswith("/api/"):
+            return jsonify({"error": "Arquivo muito grande"}), 413
+        return render_template("errors/413.html"), 413
+
     @app.errorhandler(429)
     def ratelimit_error(error):
         """Error handler para rate limit exceeded"""
-        if request.path.startswith('/api/'):
-            return jsonify({
-                'error': 'Taxa de requisições excedida',
-                'message': 'Muitas requisições. Tente novamente mais tarde.'
-            }), 429
-        return render_template('errors/429.html'), 429
+        if request.path.startswith("/api/"):
+            return (
+                jsonify(
+                    {
+                        "error": "Taxa de requisições excedida",
+                        "message": "Muitas requisições. Tente novamente mais tarde.",
+                    }
+                ),
+                429,
+            )
+        return render_template("errors/429.html"), 429
 
     # Criar tabelas
     with app.app_context():
@@ -111,64 +168,64 @@ def create_app():
 
 def configure_logging(app):
     """Configura logging com níveis diferentes para dev/prod"""
-    
+
     # Criar diretório de logs se não existir
-    if not os.path.exists('logs'):
-        os.mkdir('logs')
-    
+    if not os.path.exists("logs"):
+        os.mkdir("logs")
+
     # Configuração baseada no ambiente
     is_production = not app.debug
-    
+
     if is_production:
         # Produção: logs mais detalhados
         file_handler = RotatingFileHandler(
-            'logs/propaganda.log',
-            maxBytes=10 * 1024 * 1024,  # 10MB
-            backupCount=10
+            "logs/propaganda.log", maxBytes=10 * 1024 * 1024, backupCount=10  # 10MB
         )
-        file_handler.setFormatter(logging.Formatter(
-            '[%(asctime)s] %(levelname)s in %(module)s: %(message)s'
-        ))
+        file_handler.setFormatter(
+            logging.Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s")
+        )
         file_handler.setLevel(logging.INFO)
         app.logger.addHandler(file_handler)
-        
+
         # Log de erros separado
         error_handler = RotatingFileHandler(
-            'logs/propaganda_errors.log',
+            "logs/propaganda_errors.log",
             maxBytes=10 * 1024 * 1024,  # 10MB
-            backupCount=10
+            backupCount=10,
         )
-        error_handler.setFormatter(logging.Formatter(
-            '[%(asctime)s] %(levelname)s in %(module)s [%(pathname)s:%(lineno)d]:\n%(message)s'
-        ))
+        error_handler.setFormatter(
+            logging.Formatter(
+                "[%(asctime)s] %(levelname)s in %(module)s [%(pathname)s:%(lineno)d]:\n%(message)s"
+            )
+        )
         error_handler.setLevel(logging.ERROR)
         app.logger.addHandler(error_handler)
-        
+
         app.logger.setLevel(logging.INFO)
-        app.logger.info('Sistema de Propaganda iniciado em modo PRODUÇÃO')
+        app.logger.info("Sistema de Propaganda iniciado em modo PRODUÇÃO")
     else:
         # Desenvolvimento: logs mais verbosos no console
         console_handler = logging.StreamHandler()
-        console_handler.setFormatter(logging.Formatter(
-            '[%(asctime)s] %(levelname)s: %(message)s'
-        ))
+        console_handler.setFormatter(
+            logging.Formatter("[%(asctime)s] %(levelname)s: %(message)s")
+        )
         console_handler.setLevel(logging.DEBUG)
         app.logger.addHandler(console_handler)
-        
+
         # Arquivo de debug
         debug_handler = RotatingFileHandler(
-            'logs/propaganda_debug.log',
-            maxBytes=5 * 1024 * 1024,  # 5MB
-            backupCount=3
+            "logs/propaganda_debug.log", maxBytes=5 * 1024 * 1024, backupCount=3  # 5MB
         )
-        debug_handler.setFormatter(logging.Formatter(
-            '[%(asctime)s] %(levelname)s in %(module)s [%(pathname)s:%(lineno)d]:\n%(message)s'
-        ))
+        debug_handler.setFormatter(
+            logging.Formatter(
+                "[%(asctime)s] %(levelname)s in %(module)s [%(pathname)s:%(lineno)d]:\n%(message)s"
+            )
+        )
         debug_handler.setLevel(logging.DEBUG)
         app.logger.addHandler(debug_handler)
-        
+
         app.logger.setLevel(logging.DEBUG)
-        app.logger.info('Sistema de Propaganda iniciado em modo DESENVOLVIMENTO')
+        app.logger.info("Sistema de Propaganda iniciado em modo DESENVOLVIMENTO")
 
 
 if __name__ == "__main__":
