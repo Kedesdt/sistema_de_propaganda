@@ -67,11 +67,6 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # DEBUG TEMPORÁRIO - Verificar configuração de sessão
-    app.logger.warning(f'[DEBUG] Configuração de SECRET_KEY: {app.config.get("SECRET_KEY")[:10]}...')
-    app.logger.warning(f'[DEBUG] Configuração de SESSION_TYPE: {app.config.get("SESSION_TYPE", "filesystem (padrão)")}')
-    app.logger.warning(f'[DEBUG] Configuração de PERMANENT_SESSION_LIFETIME: {app.config.get("PERMANENT_SESSION_LIFETIME", "31 dias (padrão)")}')
-
     # Configurar logging diferenciado por ambiente
     configure_logging(app)
 
