@@ -461,7 +461,7 @@ function playVideoAtIndex(index) {
         
         console.log(`✅ Imagem exibida - será exibida por ${IMAGE_DISPLAY_DURATION / 1000} segundos`);
         
-        // Registrar visualização
+        // Registrar impressão
         registerVisualization(mediaData.id);
         
         // Configurar timer para avançar após 30 segundos
@@ -485,14 +485,14 @@ function playVideoAtIndex(index) {
         if (playPromise !== undefined) {
             playPromise.then(() => {
                 console.log('✅ Vídeo reproduzindo');
-                // Registrar visualização no servidor
+                // Registrar impressão no servidor
                 registerVisualization(mediaData.id);
             }).catch((error) => {
                 console.warn('⚠️ Autoplay bloqueado, clique na tela para iniciar:', error);
                 // Adicionar evento de clique para iniciar reprodução
                 document.body.addEventListener('click', function playOnClick() {
                     videoPlayer.play().then(() => {
-                        // Registrar visualização após o play manual
+                        // Registrar impressão após o play manual
                         registerVisualization(mediaData.id);
                     });
                     document.body.removeEventListener('click', playOnClick);
@@ -502,7 +502,7 @@ function playVideoAtIndex(index) {
     }
 }
 
-// Registrar visualização no servidor (consome crédito)
+// Registrar impressão no servidor (consome crédito)
 async function registerVisualization(videoId) {
     try {
         const url = `${config.serverUrl}/api/visualizacao/${videoId}`;
@@ -522,13 +522,13 @@ async function registerVisualization(videoId) {
         }
         
         const data = await response.json();
-        console.log(`📊 Visualização registrada - Créditos restantes: ${data.creditos_restantes}`);
+        console.log(`📊 Impressão registrada - Créditos: ${data.creditos_restantes}`);
         
         // Se o vídeo ficou sem créditos, será pausado automaticamente
         // Na próxima verificação, ele não aparecerá mais na lista
         
     } catch (error) {
-        console.error('❌ Erro ao registrar visualização:', error);
+        console.error('❌ Erro ao registrar impressão:', error);
         // Não mostrar erro ao usuário, apenas logar
     }
 }

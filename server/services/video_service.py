@@ -173,7 +173,7 @@ class VideoService:
     @staticmethod
     def registrar_visualizacao(video_id, ip_address, latitude=None, longitude=None):
         """
-        Registra uma visualização e consome 1 crédito
+        Registra uma impressão (visualização) e consome 1 crédito
 
         Returns:
             tuple: (success, message, video)
@@ -195,16 +195,16 @@ class VideoService:
             if video.pausado:
                 return False, "Vídeo pausado", video
 
-            # Registrar visualização
+            # Registrar log de impressão
             log = LogVisualizacao(
                 video_id=video_id,
-                ip_address=ip_address,
-                latitude=latitude,
-                longitude=longitude,
+                client_ip=ip_address,
+                client_latitude=latitude,
+                client_longitude=longitude,
             )
             db.session.add(log)
 
-            # Consumir crédito
+            # Consumir crédito e incrementar impressões
             video.creditos -= 1
             video.visualizacoes += 1
 
@@ -215,16 +215,14 @@ class VideoService:
             db.session.commit()
 
             current_app.logger.info(
-                f"Visualização registrada: {video.filename} (Créditos restantes: {video.creditos})"
+                f"Impressão registrada: {video.filename} (Créditos: {video.creditos})"
             )
-            return True, "Visualização registrada", video
+            return True, "Impressão registrada", video
 
         except Exception as e:
             db.session.rollback()
-            current_app.logger.error(
-                f"Erro ao registrar visualização do vídeo {video_id}: {str(e)}"
-            )
-            return False, f"Erro ao registrar visualização: {str(e)}", None
+            current_app.logger.error(f"Erro ao registrar impressão do vídeo {video_id}: {str(e)}")
+            return False, f"Erro ao registrar impressão: {str(e)}", None
 
     @staticmethod
     def deletar_video(video_id):

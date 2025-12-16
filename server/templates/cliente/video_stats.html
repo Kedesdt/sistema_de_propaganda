@@ -14,7 +14,7 @@
                         <div class="card bg-primary text-white">
                             <div class="card-body text-center">
                                 <h3>{{ video.visualizacoes }}</h3>
-                                <p class="mb-0">Visualizações</p>
+                                <p class="mb-0">Impressões</p>
                             </div>
                         </div>
                     </div>
@@ -74,10 +74,10 @@
             </div>
         </div>
         
-        <!-- Logs de Visualização -->
+        <!-- Logs de Impressão -->
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title"><i class="bi bi-clock-history"></i> Histórico de Visualizações (Últimas 100)</h5>
+                <h5 class="card-title"><i class="bi bi-clock-history"></i> Histórico de Impressões (Últimas 100)</h5>
                 
                 {% if logs %}
                     <div class="table-responsive">
@@ -111,7 +111,7 @@
                     </div>
                 {% else %}
                     <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i> Nenhuma visualização registrada ainda.
+                        <i class="bi bi-info-circle"></i> Nenhuma impressão registrada ainda.
                     </div>
                 {% endif %}
             </div>
