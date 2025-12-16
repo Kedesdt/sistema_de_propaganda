@@ -16,9 +16,14 @@ let videoIndex = 0;
 let availableVideos = []; // Lista de vídeos disponíveis
 let downloadedBlobs = []; // Blobs dos vídeos baixados
 
+let imagePlayer = null;
+let imageTimer = null;
+const IMAGE_DISPLAY_DURATION = 30000; // 30 segundos para imagens
+
 // Inicializar quando a página carregar
 window.onload = function() {
     videoPlayer = document.getElementById('video-player');
+    imagePlayer = document.getElementById('image-player');
     loadConfig();
     setupMouseInactivity();
     
@@ -224,7 +229,7 @@ async function startClient() {
 // Verificar vídeos disponíveis no servidor
 async function checkForVideos() {
     try {
-        console.log('🔍 Verificando novos vídeos...');
+        console.log('🔍 Verificando novas mídias (vídeos/imagens)...');
         
         const url = `${config.serverUrl}/api/videos?latitude=${config.latitude}&longitude=${config.longitude}`;
         const response = await fetch(url);
@@ -238,23 +243,23 @@ async function checkForVideos() {
         document.getElementById('last-check').textContent = now.toLocaleTimeString('pt-BR');
         
         if (data.videos && data.videos.length > 0) {
-            console.log(`📹 ${data.videos.length} vídeo(s) encontrado(s)`);
+            console.log(`📹 ${data.videos.length} mídia(s) encontrada(s)`);
             
             // Verificar se há vídeos novos ou removidos
             const hasChanges = checkVideoListChanges(data.videos);
             
             if (hasChanges) {
-                console.log('🔄 Mudanças detectadas na lista de vídeos');
+                console.log('🔄 Mudanças detectadas na lista de mídias');
                 availableVideos = data.videos;
                 await updateVideoList();
             } else {
-                console.log('✅ Lista de vídeos sem alterações');
+                console.log('✅ Lista de mídias sem alterações');
             }
         } else {
-            console.log('ℹ️ Nenhum vídeo disponível para esta localização');
-            document.getElementById('video-info').textContent = 'Nenhum disponível';
+            console.log('ℹ️ Nenhuma mídia disponível para esta localização');
+            document.getElementById('video-info').textContent = 'Nenhuma disponível';
             
-            // Limpar vídeos
+            // Limpar mídias
             if (availableVideos.length > 0) {
                 clearAllVideos();
             }
@@ -262,7 +267,7 @@ async function checkForVideos() {
         
         updateStatus(true);
     } catch (error) {
-        console.error('❌ Erro ao verificar vídeos:', error);
+        console.error('❌ Erro ao verificar mídias:', error);
         updateStatus(false);
         // Não mostrar erro se já estiver reproduzindo um vídeo
         if (!currentVideoId) {
@@ -341,10 +346,14 @@ async function updateVideoList() {
                 const blob = await response.blob();
                 const blobUrl = URL.createObjectURL(blob);
                 
+                // Detectar se é imagem ou vídeo pela extensão
+                const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(video.original_filename);
+                
                 downloadedBlobs.push({
                     id: video.id,
                     url: blobUrl,
-                    filename: video.original_filename
+                    filename: video.original_filename,
+                    isImage: isImage
                 });
                 
                 console.log(`   ✅ Baixado: ${video.original_filename}`);
@@ -392,10 +401,14 @@ async function downloadAllVideos() {
             const blob = await response.blob();
             const blobUrl = URL.createObjectURL(blob);
             
+            // Detectar se é imagem ou vídeo pela extensão
+            const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(video.original_filename);
+            
             downloadedBlobs.push({
                 id: video.id,
                 url: blobUrl,
-                filename: video.original_filename
+                filename: video.original_filename,
+                isImage: isImage
             });
         }
         
@@ -413,45 +426,79 @@ async function downloadAllVideos() {
     }
 }
 
-// Reproduzir vídeo no índice especificado
+// Reproduzir vídeo ou imagem no índice especificado
 function playVideoAtIndex(index) {
     if (downloadedBlobs.length === 0) {
-        console.log('ℹ️ Nenhum vídeo disponível para reproduzir');
+        console.log('ℹ️ Nenhuma mídia disponível para reproduzir');
         return;
+    }
+    
+    // Limpar timer de imagem anterior se existir
+    if (imageTimer) {
+        clearTimeout(imageTimer);
+        imageTimer = null;
     }
     
     // Garantir que o índice está dentro dos limites
     videoIndex = index % downloadedBlobs.length;
     
-    const videoData = downloadedBlobs[videoIndex];
-    console.log(`▶️ Reproduzindo vídeo ${videoIndex + 1}/${downloadedBlobs.length}: ${videoData.filename}`);
-    
-    videoPlayer.src = videoData.url;
-    videoPlayer.load();
+    const mediaData = downloadedBlobs[videoIndex];
+    const mediaType = mediaData.isImage ? 'imagem' : 'vídeo';
+    console.log(`▶️ Reproduzindo ${mediaType} ${videoIndex + 1}/${downloadedBlobs.length}: ${mediaData.filename}`);
     
     // Atualizar interface
     document.getElementById('video-info').textContent = 
-        `${videoData.filename} (${videoIndex + 1}/${downloadedBlobs.length})`;
+        `${mediaData.filename} (${videoIndex + 1}/${downloadedBlobs.length})`;
     
-    // Tentar reproduzir
-    const playPromise = videoPlayer.play();
-    
-    if (playPromise !== undefined) {
-        playPromise.then(() => {
-            console.log('✅ Vídeo reproduzindo');
-            // Registrar visualização no servidor
-            registerVisualization(videoData.id);
-        }).catch((error) => {
-            console.warn('⚠️ Autoplay bloqueado, clique na tela para iniciar:', error);
-            // Adicionar evento de clique para iniciar reprodução
-            document.body.addEventListener('click', function playOnClick() {
-                videoPlayer.play().then(() => {
-                    // Registrar visualização após o play manual
-                    registerVisualization(videoData.id);
-                });
-                document.body.removeEventListener('click', playOnClick);
-            }, { once: true });
-        });
+    if (mediaData.isImage) {
+        // Exibir imagem
+        videoPlayer.style.display = 'none';
+        videoPlayer.pause();
+        videoPlayer.src = '';
+        
+        imagePlayer.src = mediaData.url;
+        imagePlayer.style.display = 'block';
+        
+        console.log(`✅ Imagem exibida - será exibida por ${IMAGE_DISPLAY_DURATION / 1000} segundos`);
+        
+        // Registrar visualização
+        registerVisualization(mediaData.id);
+        
+        // Configurar timer para avançar após 30 segundos
+        imageTimer = setTimeout(() => {
+            console.log('⏱️ Tempo de exibição da imagem esgotado');
+            playNextVideo();
+        }, IMAGE_DISPLAY_DURATION);
+        
+    } else {
+        // Exibir vídeo
+        imagePlayer.style.display = 'none';
+        imagePlayer.src = '';
+        
+        videoPlayer.src = mediaData.url;
+        videoPlayer.style.display = 'block';
+        videoPlayer.load();
+        
+        // Tentar reproduzir
+        const playPromise = videoPlayer.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log('✅ Vídeo reproduzindo');
+                // Registrar visualização no servidor
+                registerVisualization(mediaData.id);
+            }).catch((error) => {
+                console.warn('⚠️ Autoplay bloqueado, clique na tela para iniciar:', error);
+                // Adicionar evento de clique para iniciar reprodução
+                document.body.addEventListener('click', function playOnClick() {
+                    videoPlayer.play().then(() => {
+                        // Registrar visualização após o play manual
+                        registerVisualization(mediaData.id);
+                    });
+                    document.body.removeEventListener('click', playOnClick);
+                }, { once: true });
+            });
+        }
     }
 }
 
@@ -486,19 +533,25 @@ async function registerVisualization(videoId) {
     }
 }
 
-// Reproduzir próximo vídeo
+// Reproduzir próxima mídia
 function playNextVideo() {
     if (downloadedBlobs.length === 0) {
         return;
     }
     
-    console.log('⏭️ Próximo vídeo...');
+    console.log('⏭️ Próxima mídia...');
     const nextIndex = (videoIndex + 1) % downloadedBlobs.length;
     playVideoAtIndex(nextIndex);
 }
 
-// Limpar todos os vídeos
+// Limpar todas as mídias
 function clearAllVideos() {
+    // Limpar timer de imagem se existir
+    if (imageTimer) {
+        clearTimeout(imageTimer);
+        imageTimer = null;
+    }
+    
     // Liberar todos os blobs
     downloadedBlobs.forEach(item => {
         URL.revokeObjectURL(item.url);
@@ -511,6 +564,10 @@ function clearAllVideos() {
     // Parar reprodução
     videoPlayer.src = '';
     videoPlayer.pause();
+    videoPlayer.style.display = 'block';
+    
+    imagePlayer.src = '';
+    imagePlayer.style.display = 'none';
 }
 
 // Baixar e reproduzir vídeo (mantido para compatibilidade, mas não é mais usado)

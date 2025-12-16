@@ -87,7 +87,8 @@
                                 {% for video in videos %}
                                     <tr>
                                         <td>
-                                            <i class="bi bi-camera-video"></i>
+                                            {% set is_image = video.original_filename|is_image %}
+                                            <i class="bi bi-{% if is_image %}image{% else %}camera-video{% endif %}"></i>
                                             {{ video.original_filename }}
                                         </td>
                                         <td>
@@ -137,7 +138,7 @@
                     </div>
                 {% else %}
                     <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i> Você ainda não enviou nenhum vídeo.
+                        <i class="bi bi-info-circle"></i> Você ainda não enviou nenhuma mídia.
                     </div>
                 {% endif %}
             </div>

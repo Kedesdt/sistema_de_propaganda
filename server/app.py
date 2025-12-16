@@ -70,6 +70,14 @@ def create_app():
     # Configurar logging diferenciado por ambiente
     configure_logging(app)
 
+    # Registrar filtro customizado Jinja2 para detectar tipo de arquivo
+    @app.template_filter("is_image")
+    def is_image_filter(filename):
+        """Verifica se o arquivo é uma imagem pela extensão"""
+        if not filename:
+            return False
+        return filename.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".webp"))
+
     # Inicializar Rate Limiter
     limiter.init_app(app)
 

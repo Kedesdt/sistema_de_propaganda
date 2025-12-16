@@ -45,9 +45,9 @@ class ClienteRegisterForm(FlaskForm):
     submit = SubmitField('Cadastrar')
 
 class UploadVideoForm(FlaskForm):
-    video = FileField('Vídeo', validators=[
+    video = FileField('Vídeo ou Imagem', validators=[
         FileRequired(),
-        FileAllowed(['mp4', 'avi', 'mov', 'mkv', 'webm'], 'Somente arquivos de vídeo!')
+        FileAllowed(['mp4', 'avi', 'mov', 'mkv', 'webm', 'jpg', 'jpeg', 'png', 'gif', 'webp'], 'Somente vídeos ou imagens!')
     ])
     latitude = FloatField('Latitude', validators=[
         DataRequired(),
@@ -64,9 +64,9 @@ class UploadVideoForm(FlaskForm):
     submit = SubmitField('Upload')
 
 class ClienteUploadVideoForm(FlaskForm):
-    video = FileField('Vídeo', validators=[
+    video = FileField('Vídeo ou Imagem', validators=[
         FileRequired(),
-        FileAllowed(['mp4', 'avi', 'mov', 'mkv', 'webm'], 'Somente arquivos de vídeo!')
+        FileAllowed(['mp4', 'avi', 'mov', 'mkv', 'webm', 'jpg', 'jpeg', 'png', 'gif', 'webp'], 'Somente vídeos ou imagens!')
     ])
     latitude = FloatField('Latitude', validators=[
         DataRequired(),

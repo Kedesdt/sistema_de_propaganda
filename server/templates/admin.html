@@ -8,7 +8,7 @@
     <div class="card-body">
         <h5 class="card-title"><i class="bi bi-info-circle"></i> Informações do Sistema</h5>
                 <p class="mb-1"><strong>Última atualização:</strong> {{ last_update.strftime('%d/%m/%Y %H:%M:%S') }}</p>
-                <p class="mb-1"><strong>Total de vídeos:</strong> {{ videos|length }}</p>
+                <p class="mb-1"><strong>Total de mídias:</strong> {{ videos|length }}</p>
                 <div class="mt-3">
                     <a href="{{ url_for('admin.download_client') }}" class="btn btn-success">
                         <i class="bi bi-download"></i> Baixar Cliente (client.exe)
@@ -20,7 +20,7 @@
         <!-- Formulário de Upload -->
         <div class="card mb-4">
             <div class="card-body">
-                <h5 class="card-title"><i class="bi bi-cloud-upload"></i> Upload de Vídeo</h5>
+                <h5 class="card-title"><i class="bi bi-cloud-upload"></i> Upload de Mídia (Vídeo/Imagem)</h5>
                 
                 <form method="POST" action="{{ url_for('admin.upload_video') }}" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
@@ -62,7 +62,7 @@
         <!-- Lista de Vídeos -->
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title"><i class="bi bi-film"></i> Vídeos Cadastrados</h5>
+                <h5 class="card-title"><i class="bi bi-film"></i> Mídias Cadastradas</h5>
                 
                 {% if videos %}
                     <div class="table-responsive">
@@ -96,8 +96,9 @@
                                             {% endif %}
                                         </td>
                                         <td>
-                                            <i class="bi bi-camera-video"></i>
-                                            <a href="#" class="text-decoration-none" onclick="previewVideo({{ video.id }}, '{{ video.original_filename }}'); return false;" style="cursor: pointer;">
+                                            {% set is_image = video.original_filename|is_image %}
+                                            <i class="bi bi-{% if is_image %}image{% else %}camera-video{% endif %}"></i>
+                                            <a href="#" class="text-decoration-none" onclick="previewMedia({{ video.id }}, '{{ video.original_filename }}', {{ 'true' if is_image else 'false' }}); return false;" style="cursor: pointer;">
                                                 {{ video.original_filename }}
                                             </a>
                                         </td>
@@ -213,29 +214,36 @@
                     </div>
                 {% else %}
                     <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i> Nenhum vídeo cadastrado ainda.
+                        <i class="bi bi-info-circle"></i> Nenhuma mídia cadastrada ainda.
                     </div>
                 {% endif %}
             </div>
         </div>
 
-<!-- Modal de Preview do Vídeo -->
+<!-- Modal de Preview de Mídia (Vídeo/Imagem) -->
 <div class="modal fade" id="videoPreviewModal" tabindex="-1" aria-labelledby="videoPreviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="videoPreviewModalLabel">
-                    <i class="bi bi-play-circle"></i> Preview do Vídeo
+                    <i class="bi bi-play-circle" id="modalIcon"></i> <span id="modalTitle">Preview</span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="ratio ratio-16x9">
+                <!-- Container para vídeo -->
+                <div id="videoContainer" class="ratio ratio-16x9">
                     <video id="previewVideoPlayer" controls controlsList="nodownload">
                         <source id="previewVideoSource" src="" type="video/mp4">
                         Seu navegador não suporta a tag de vídeo.
                     </video>
                 </div>
+                
+                <!-- Container para imagem -->
+                <div id="imageContainer" class="text-center" style="display: none;">
+                    <img id="previewImagePlayer" src="" alt="Preview" class="img-fluid" style="max-height: 70vh; object-fit: contain;">
+                </div>
+                
                 <div class="mt-3">
                     <p class="mb-0"><strong>Arquivo:</strong> <span id="videoFileName"></span></p>
                 </div>
@@ -254,39 +262,66 @@
 <script>
     let videoModal;
     let videoPlayer;
+    let imagePlayer;
+    let videoContainer;
+    let imageContainer;
     
     document.addEventListener('DOMContentLoaded', function() {
-        // Inicializar modal
+        // Inicializar elementos
         videoModal = new bootstrap.Modal(document.getElementById('videoPreviewModal'));
         videoPlayer = document.getElementById('previewVideoPlayer');
+        imagePlayer = document.getElementById('previewImagePlayer');
+        videoContainer = document.getElementById('videoContainer');
+        imageContainer = document.getElementById('imageContainer');
         
         // Pausar vídeo quando modal fechar
         document.getElementById('videoPreviewModal').addEventListener('hidden.bs.modal', function () {
             videoPlayer.pause();
             videoPlayer.currentTime = 0;
+            videoPlayer.src = '';
+            imagePlayer.src = '';
         });
     });
     
-    function previewVideo(videoId, fileName) {
+    function previewMedia(mediaId, fileName, isImage) {
         // Atualizar nome do arquivo
         document.getElementById('videoFileName').textContent = fileName;
         
-        // Configurar source do vídeo
-        const videoSource = document.getElementById('previewVideoSource');
-        videoSource.src = `/api/download/${videoId}`;
-        
-        // Recarregar vídeo
-        videoPlayer.load();
+        if (isImage) {
+            // Exibir imagem
+            document.getElementById('modalTitle').textContent = 'Preview da Imagem';
+            document.getElementById('modalIcon').className = 'bi bi-image';
+            
+            videoContainer.style.display = 'none';
+            imageContainer.style.display = 'block';
+            
+            imagePlayer.src = `/api/download/${mediaId}`;
+            videoPlayer.src = '';
+        } else {
+            // Exibir vídeo
+            document.getElementById('modalTitle').textContent = 'Preview do Vídeo';
+            document.getElementById('modalIcon').className = 'bi bi-play-circle';
+            
+            videoContainer.style.display = 'block';
+            imageContainer.style.display = 'none';
+            
+            const videoSource = document.getElementById('previewVideoSource');
+            videoSource.src = `/api/download/${mediaId}`;
+            imagePlayer.src = '';
+            
+            // Recarregar vídeo
+            videoPlayer.load();
+            
+            // Auto-play quando carregar
+            videoPlayer.onloadeddata = function() {
+                videoPlayer.play().catch(function(error) {
+                    console.log('Auto-play bloqueado:', error);
+                });
+            };
+        }
         
         // Abrir modal
         videoModal.show();
-        
-        // Opcional: auto-play quando carregar
-        videoPlayer.onloadeddata = function() {
-            videoPlayer.play().catch(function(error) {
-                console.log('Auto-play bloqueado:', error);
-            });
-        };
     }
 </script>
 {% endblock %}

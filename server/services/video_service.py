@@ -32,8 +32,8 @@ class VideoService:
             if not file or file.filename == "":
                 return None, "Nenhum arquivo selecionado"
 
-            # Validar extensão
-            allowed_extensions = {".mp4", ".avi", ".mov", ".mkv"}
+            # Validar extensão (vídeos e imagens)
+            allowed_extensions = {'.mp4', '.avi', '.mov', '.mkv', '.webm', '.jpg', '.jpeg', '.png', '.gif', '.webp'}
             ext = os.path.splitext(file.filename)[1].lower()
             if ext not in allowed_extensions:
                 return (

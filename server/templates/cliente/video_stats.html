@@ -3,10 +3,11 @@
 {% block title %}Estatísticas - {{ video.original_filename }}{% endblock %}
 
 {% block content %}
-<!-- Informações do Vídeo -->
+<!-- Informações da Mídia -->
 <div class="card mb-4">
     <div class="card-body">
-        <h5 class="card-title"><i class="bi bi-camera-video"></i> {{ video.original_filename }}</h5>
+        {% set is_image = video.original_filename|is_image %}
+        <h5 class="card-title"><i class="bi bi-{% if is_image %}image{% else %}camera-video{% endif %}"></i> {{ video.original_filename }}</h5>
         
                 <div class="row mt-3">
                     <div class="col-md-3">
