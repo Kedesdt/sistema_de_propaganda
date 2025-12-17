@@ -1,12 +1,15 @@
 """
 Rotas administrativas
 """
-from flask import Blueprint, request, render_template, redirect, url_for, session, send_from_directory, flash, current_app
+from flask import Blueprint, request, render_template, redirect, url_for, session, send_from_directory, send_file, flash, current_app
 from models import db, SystemStatus
 from forms import LoginForm, UploadVideoForm
 from utils.decorators import admin_required
 from services import VideoService, AuthService
 import os
+import zipfile
+import tempfile
+import shutil
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -181,17 +184,50 @@ def delete_video(video_id):
 @admin_bp.route('/download-client')
 @admin_required
 def download_client():
-    """Download do client.exe"""
-    client_folder = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'client')
-    client_exe = 'client.exe'
-    
-    if os.path.exists(os.path.join(client_folder, client_exe)):
-        return send_from_directory(
-            client_folder,
-            client_exe,
+    """Download da pasta client compactada"""
+    try:
+        # Localizar pasta client (um nível acima da pasta server)
+        server_folder = os.path.dirname(os.path.dirname(__file__))
+        project_root = os.path.dirname(server_folder)
+        client_folder = os.path.join(project_root, 'client')
+        
+        if not os.path.exists(client_folder):
+            flash('Pasta client/ não encontrada!', 'danger')
+            return redirect(url_for('admin.dashboard'))
+        
+        # Criar arquivo ZIP temporário
+        temp_dir = tempfile.gettempdir()
+        zip_path = os.path.join(temp_dir, 'propaganda_client.zip')
+        
+        # Remover ZIP antigo se existir
+        if os.path.exists(zip_path):
+            os.remove(zip_path)
+        
+        # Criar ZIP com todos os arquivos da pasta client
+        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            for root, dirs, files in os.walk(client_folder):
+                # Ignorar pastas de ambiente virtual e cache
+                dirs[:] = [d for d in dirs if d not in ['venv', '__pycache__', '.pytest_cache', 'downloads']]
+                
+                for file in files:
+                    # Ignorar arquivos desnecessários
+                    if file.endswith(('.pyc', '.pyo', '.exe', '.timestamp')):
+                        continue
+                    
+                    file_path = os.path.join(root, file)
+                    # Nome do arquivo no ZIP (relativo à pasta client)
+                    arcname = os.path.join('client', os.path.relpath(file_path, client_folder))
+                    zipf.write(file_path, arcname)
+        
+        # Enviar arquivo ZIP
+        return send_file(
+            zip_path,
             as_attachment=True,
-            download_name='propaganda_client.exe'
+            download_name='propaganda_client.zip',
+            mimetype='application/zip'
         )
-    else:
-        flash('Arquivo client.exe não encontrado na pasta client/', 'danger')
+        
+    except Exception as e:
+        current_app.logger.error(f"Erro ao criar ZIP do client: {e}")
+        flash(f'Erro ao preparar download: {str(e)}', 'danger')
         return redirect(url_for('admin.dashboard'))

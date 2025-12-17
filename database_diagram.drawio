@@ -1,0 +1,134 @@
+<mxfile host="65bd71144e">
+    <diagram name="Database Schema" id="sistema-propaganda">
+        <mxGraphModel dx="767" dy="476" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="clientes-table" value=" clientes" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="80" width="280" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="clientes-pk" value="🔑 id: INTEGER (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" parent="clientes-table" vertex="1">
+                    <mxGeometry y="40" width="280" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="clientes-nome" value="nome: VARCHAR(255) NOT NULL" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="clientes-table" vertex="1">
+                    <mxGeometry y="70" width="280" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="clientes-email" value="email: VARCHAR(255) UNIQUE NOT NULL" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="clientes-table" vertex="1">
+                    <mxGeometry y="100" width="280" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="clientes-senha" value="senha: VARCHAR(255) NOT NULL (hash)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="clientes-table" vertex="1">
+                    <mxGeometry y="130" width="280" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="clientes-cpf" value="cpf_cnpj: VARCHAR(20) UNIQUE" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="clientes-table" vertex="1">
+                    <mxGeometry y="160" width="280" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="clientes-telefone" value="telefone: VARCHAR(50)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="clientes-table" vertex="1">
+                    <mxGeometry y="190" width="280" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="clientes-endereco" value="endereco: VARCHAR(200) NOT NULL" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="clientes-table" vertex="1">
+                    <mxGeometry y="220" width="280" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="clientes-created" value="created_at: DATETIME" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="clientes-table" vertex="1">
+                    <mxGeometry y="250" width="280" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-table" value="videos" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="80" width="300" height="460" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-pk" value="🔑 id: INTEGER (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" parent="videos-table" vertex="1">
+                    <mxGeometry y="40" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-fk" value="🔗 cliente_id: INTEGER (FK → clientes.id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;fontColor=#0066CC;" parent="videos-table" vertex="1">
+                    <mxGeometry y="70" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-filename" value="filename: VARCHAR(255) NOT NULL" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="videos-table" vertex="1">
+                    <mxGeometry y="100" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-original" value="original_filename: VARCHAR(255) NOT NULL" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="videos-table" vertex="1">
+                    <mxGeometry y="130" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-lat" value="latitude: FLOAT NOT NULL" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="videos-table" vertex="1">
+                    <mxGeometry y="160" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-lon" value="longitude: FLOAT NOT NULL" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="videos-table" vertex="1">
+                    <mxGeometry y="190" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-radius" value="radius_km: FLOAT NOT NULL" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="videos-table" vertex="1">
+                    <mxGeometry y="220" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-aprovado" value="aprovado: BOOLEAN DEFAULT FALSE" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="videos-table" vertex="1">
+                    <mxGeometry y="250" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-pago" value="pago: BOOLEAN DEFAULT FALSE" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="videos-table" vertex="1">
+                    <mxGeometry y="280" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-creditos" value="creditos: INTEGER DEFAULT 0" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="videos-table" vertex="1">
+                    <mxGeometry y="310" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-pausado" value="pausado: BOOLEAN DEFAULT FALSE" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="videos-table" vertex="1">
+                    <mxGeometry y="340" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-visualizacoes" value="visualizacoes: INTEGER DEFAULT 0" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="videos-table" vertex="1">
+                    <mxGeometry y="370" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-uploaded" value="uploaded_at: DATETIME" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="videos-table" vertex="1">
+                    <mxGeometry y="400" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="videos-note" value="📝 Aceita vídeos e imagens" style="text;strokeColor=none;fillColor=#f5f5f5;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;fontStyle=2;fontColor=#666666;" parent="videos-table" vertex="1">
+                    <mxGeometry y="430" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="logs-table" value="logs_visualizacao" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="880" y="180" width="260" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="logs-pk" value="🔑 id: INTEGER (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" parent="logs-table" vertex="1">
+                    <mxGeometry y="40" width="260" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="logs-fk" value="🔗 video_id: INTEGER (FK → videos.id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;fontColor=#0066CC;" parent="logs-table" vertex="1">
+                    <mxGeometry y="70" width="260" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="logs-ip" value="client_ip: VARCHAR(50)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="logs-table" vertex="1">
+                    <mxGeometry y="100" width="260" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="logs-lat" value="client_latitude: FLOAT" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="logs-table" vertex="1">
+                    <mxGeometry y="130" width="260" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="logs-lon" value="client_longitude: FLOAT" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="logs-table" vertex="1">
+                    <mxGeometry y="160" width="260" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="logs-data" value="visualizado_em: DATETIME" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="logs-table" vertex="1">
+                    <mxGeometry y="190" width="260" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-table" value="system_status" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="880" y="440" width="260" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-pk" value="🔑 id: INTEGER (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;fontSize=11;" parent="system-table" vertex="1">
+                    <mxGeometry y="40" width="260" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="system-update" value="last_update: DATETIME" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="system-table" vertex="1">
+                    <mxGeometry y="70" width="260" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel-cliente-videos" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#0066CC;" parent="1" source="clientes-pk" target="videos-fk" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel-label-1" value="1:N" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;backgroundColor=#ffffff;" parent="rel-cliente-videos" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1" y="1" relative="1" as="geometry">
+                        <mxPoint x="5" y="-9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="rel-videos-logs" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;strokeColor=#9673a6;" parent="1" source="videos-pk" target="logs-fk" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="rel-label-2" value="1:N" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;backgroundColor=#ffffff;" parent="rel-videos-logs" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1" y="1" relative="1" as="geometry">
+                        <mxPoint x="5" y="-9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="legend-box" value="&lt;b&gt;Legenda&lt;/b&gt;&lt;br&gt;🔑 = Primary Key&lt;br&gt;🔗 = Foreign Key&lt;br&gt;1:N = Um para Muitos" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="420" width="280" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="title" value="&lt;h1&gt;🗄️ Sistema de Propaganda - Database Schema&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="10" width="600" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

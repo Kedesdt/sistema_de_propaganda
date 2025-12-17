@@ -33,7 +33,18 @@ class VideoService:
                 return None, "Nenhum arquivo selecionado"
 
             # Validar extensão (vídeos e imagens)
-            allowed_extensions = {'.mp4', '.avi', '.mov', '.mkv', '.webm', '.jpg', '.jpeg', '.png', '.gif', '.webp'}
+            allowed_extensions = {
+                ".mp4",
+                ".avi",
+                ".mov",
+                ".mkv",
+                ".webm",
+                ".jpg",
+                ".jpeg",
+                ".png",
+                ".gif",
+                ".webp",
+            }
             ext = os.path.splitext(file.filename)[1].lower()
             if ext not in allowed_extensions:
                 return (
@@ -221,7 +232,9 @@ class VideoService:
 
         except Exception as e:
             db.session.rollback()
-            current_app.logger.error(f"Erro ao registrar impressão do vídeo {video_id}: {str(e)}")
+            current_app.logger.error(
+                f"Erro ao registrar impressão do vídeo {video_id}: {str(e)}"
+            )
             return False, f"Erro ao registrar impressão: {str(e)}", None
 
     @staticmethod
