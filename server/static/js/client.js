@@ -30,7 +30,7 @@ window.onload = function() {
     if (config.latitude && config.longitude) {
         startClient();
     } else {
-        showError('Configure a localização do cliente antes de começar.');
+        console.warn('⚠️ Configure a localização do cliente antes de começar.');
         toggleConfig();
     }
     
@@ -213,7 +213,6 @@ function getLocation() {
 // Iniciar cliente
 async function startClient() {
     console.log('🚀 Iniciando cliente web...');
-    hideError();
     hideLoading();
     
     // Verificar imediatamente
@@ -269,10 +268,7 @@ async function checkForVideos() {
     } catch (error) {
         console.error('❌ Erro ao verificar mídias:', error);
         updateStatus(false);
-        // Não mostrar erro se já estiver reproduzindo um vídeo
-        if (!currentVideoId) {
-            showError(`Erro ao conectar ao servidor: ${error.message}`);
-        }
+        // Erro logado apenas no console
     }
 }
 
@@ -374,7 +370,7 @@ async function updateVideoList() {
     } catch (error) {
         console.error('❌ Erro ao atualizar lista de vídeos:', error);
         hideLoading();
-        showError(`Erro ao atualizar vídeos: ${error.message}`);
+        // Erro logado apenas no console
     }
 }
 
@@ -617,7 +613,7 @@ async function downloadAndPlayVideo(video) {
     } catch (error) {
         console.error('❌ Erro ao baixar/reproduzir vídeo:', error);
         hideLoading();
-        showError(`Erro ao carregar vídeo: ${error.message}`);
+        // Erro logado apenas no console
     }
 }
 
@@ -645,21 +641,14 @@ function hideLoading() {
     document.getElementById('loading').classList.add('hidden');
 }
 
-// Mostrar erro
+// Funções de erro mantidas para compatibilidade (apenas console)
 function showError(message) {
-    document.getElementById('error-text').textContent = message;
-    document.getElementById('error-message').style.display = 'block';
+    // Mensagens de erro aparecem apenas no console
+    console.error('❌', message);
 }
 
-// Esconder erro
 function hideError() {
-    document.getElementById('error-message').style.display = 'none';
-}
-
-// Tentar reconectar
-function retryConnection() {
-    hideError();
-    startClient();
+    // Função mantida para compatibilidade
 }
 
 // Limpar recursos ao fechar a página
