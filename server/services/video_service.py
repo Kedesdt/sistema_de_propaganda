@@ -308,3 +308,38 @@ class VideoService:
     def get_videos_nao_pagos():
         """Retorna vídeos não pagos"""
         return Video.query.filter_by(pago=False).order_by(Video.id.desc()).all()
+
+    @staticmethod
+    def get_estatisticas_video(video_id):
+        """
+        Retorna estatísticas de um vídeo
+
+        Returns:
+            dict or None
+        """
+        video = Video.query.filter_by(id=video_id).first()
+
+        if not video:
+            return None
+
+        visualizacoes = (
+            LogVisualizacao.query.filter_by(video_id=video_id)
+            .order_by(LogVisualizacao.visualizado_em.desc())
+            .limit(100)
+            .all()
+        )
+
+        return {
+            "video": video,
+            "visualizacoes": visualizacoes,
+            "total_visualizacoes": video.visualizacoes,
+            "creditos_restantes": video.creditos,
+            "status": (
+                "Ativo" if not video.pausado and video.creditos > 0 else "Pausado"
+            ),
+        }
+
+    @staticmethod
+    def get_video_by_id(video_id):
+        """Retorna vídeo por ID"""
+        return Video.query.get(video_id)

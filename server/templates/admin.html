@@ -75,6 +75,7 @@
                                     <th>Status</th>
                                     <th>Créditos</th>
                                     <th>Impressões</th>
+                                    <th>Ultima Impressão</th>
                                     <th>Localização</th>
                                     <th>Raio (km)</th>
                                     <th>Data Upload</th>
@@ -84,7 +85,7 @@
                             <tbody>
                                 {% for video in videos %}
                                     <tr {% if video.pausado %}class="table-secondary"{% endif %}>
-                                        <td>{{ video.id }}</td>
+                                        <td><a href="{{ url_for('admin.video_stats', video_id=video.id) }}">{{ video.id }}</a></td>
                                         <td>
                                             {% if video.cliente %}
                                                 <small>
@@ -127,6 +128,7 @@
                                             </span>
                                         </td>
                                         <td>{{ video.visualizacoes }}</td>
+                                        <td>{{ video.logs_visualizacao[-1].visualizado_em.strftime("%Y-%m-%d %H:%M:%S") if video.logs_visualizacao else None }}</td>
                                         <td>
                                             <small>
                                                 Lat: {{ "%.4f"|format(video.latitude) }}<br>
