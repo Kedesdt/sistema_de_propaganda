@@ -258,16 +258,14 @@ def download_client():
 def video_stats(video_id):
     """Estatísticas de um vídeo"""
     stats = VideoService.get_estatisticas_video(video_id)
-    video = VideoService.get_video_by_id(video_id)
-
-    if not video:
-        flash("Vídeo não encontrado!", "danger")
-        return redirect(url_for("admin.dashboard"))
 
     if stats is None:
         flash("Vídeo não encontrado!", "danger")
         return redirect(url_for("admin.dashboard"))
 
     return render_template(
-        "video_stats.html", stats=stats, video=video, logs=stats["visualizacoes"]
+        "video_stats.html",
+        stats=stats,
+        video=stats["video"],
+        logs=stats["visualizacoes"],
     )
