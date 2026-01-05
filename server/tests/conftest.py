@@ -1,13 +1,14 @@
 """
 Configuração de fixtures para testes
 """
+
 import pytest
 import os
 import sys
 from flask import Flask
 
 # Adicionar diretório pai ao path para importar módulos
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import create_app
 from models import db, Video, Cliente, SystemStatus
@@ -16,12 +17,13 @@ from config import Config
 
 class TestConfig(Config):
     """Configuração para testes"""
+
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'  # Banco em memória
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"  # Banco em memória
     WTF_CSRF_ENABLED = False  # Desabilitar CSRF para testes
-    UPLOAD_FOLDER = 'test_uploads'
-    SECRET_KEY = 'test-secret-key'
-    ADMIN_PASSWORD = 'admin123'
+    UPLOAD_FOLDER = "test_uploads"
+    SECRET_KEY = "test-secret-key"
+    ADMIN_PASSWORD = "admin123"
 
 
 @pytest.fixture
@@ -29,17 +31,17 @@ def app():
     """Cria e configura uma instância do app para testes"""
     app = create_app()
     app.config.from_object(TestConfig)
-    
+
     with app.app_context():
         db.create_all()
-        
+
         # Inicializar SystemStatus
         status = SystemStatus()
         db.session.add(status)
         db.session.commit()
-        
+
         yield app
-        
+
         # Cleanup
         db.session.remove()
         db.drop_all()
@@ -61,7 +63,15 @@ def runner(app):
 def authenticated_admin_client(client):
     """Cliente autenticado como admin"""
     with client.session_transaction() as session:
-        session['admin_logged_in'] = True
+        session["admin_logged_in"] = True
+    return client
+
+
+@pytest.fixture
+def authenticated_cliente_client(client, sample_cliente):
+    """Cliente autenticado como cliente"""
+    with client.session_transaction() as session:
+        session["cliente_id"] = sample_cliente.id
     return client
 
 
@@ -70,15 +80,16 @@ def sample_video(app):
     """Cria um vídeo de exemplo no banco"""
     with app.app_context():
         video = Video(
-            filename='test_video.mp4',
-            original_filename='test_video.mp4',
+            filename="test_video.mp4",
+            original_filename="test_video.mp4",
             latitude=-23.5505,
             longitude=-46.6333,
             radius_km=10.0,
             aprovado=True,
             pago=True,
             creditos=100,
-            pausado=False
+            pausado=False,
+            visualizacoes=0,
         )
         db.session.add(video)
         db.session.commit()
@@ -86,17 +97,38 @@ def sample_video(app):
 
 
 @pytest.fixture
+def sample_image(app):
+    """Cria uma imagem de exemplo no banco"""
+    with app.app_context():
+        image = Video(
+            filename="test_image.jpg",
+            original_filename="test_image.jpg",
+            latitude=-23.5505,
+            longitude=-46.6333,
+            radius_km=10.0,
+            aprovado=True,
+            pago=True,
+            creditos=50,
+            pausado=False,
+            visualizacoes=0,
+        )
+        db.session.add(image)
+        db.session.commit()
+        return image
+
+
+@pytest.fixture
 def sample_cliente(app):
     """Cria um cliente de exemplo no banco"""
     with app.app_context():
         cliente = Cliente(
-            nome='João Silva',
-            email='joao@example.com',
-            cpf_cnpj='12345678901',
-            telefone='11987654321',
-            endereco='Rua Teste, 123'
+            nome="João Silva",
+            email="joao@example.com",
+            cpf_cnpj="12345678901",
+            telefone="11987654321",
+            endereco="Rua Teste, 123",
         )
-        cliente.set_password('senha123')
+        cliente.set_password("senha123")
         db.session.add(cliente)
         db.session.commit()
         return cliente
@@ -106,6 +138,6 @@ def sample_cliente(app):
 def authenticated_cliente_client(client, sample_cliente):
     """Cliente autenticado como cliente"""
     with client.session_transaction() as session:
-        session['cliente_id'] = sample_cliente.id
-        session['cliente_nome'] = sample_cliente.nome
+        session["cliente_id"] = sample_cliente.id
+        session["cliente_nome"] = sample_cliente.nome
     return client

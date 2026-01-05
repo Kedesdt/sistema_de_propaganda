@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, timezone
 
 db = SQLAlchemy()
 
@@ -13,7 +13,7 @@ class Cliente(db.Model):
     telefone = db.Column(db.String(50))
     cpf_cnpj = db.Column(db.String(20), unique=True)
     senha = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     endereco = db.Column(db.String(200), nullable=False)
 
     # Relacionamento com vídeos
@@ -55,7 +55,7 @@ class Video(db.Model):
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
     radius_km = db.Column(db.Float, nullable=False)
-    uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
+    uploaded_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     # Novos campos
     cliente_id = db.Column(db.Integer, db.ForeignKey("clientes.id"), nullable=True)
@@ -115,7 +115,7 @@ class LogVisualizacao(db.Model):
     client_ip = db.Column(db.String(50))
     client_latitude = db.Column(db.Float)
     client_longitude = db.Column(db.Float)
-    visualizado_em = db.Column(db.DateTime, default=datetime.utcnow)
+    visualizado_em = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     def __repr__(self):
         return f"<LogVisualizacao video_id={self.video_id} em {self.visualizado_em}>"
@@ -125,7 +125,7 @@ class SystemStatus(db.Model):
     __tablename__ = "system_status"
 
     id = db.Column(db.Integer, primary_key=True)
-    last_update = db.Column(db.DateTime, default=datetime.utcnow)
+    last_update = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     @staticmethod
     def get_last_update():
@@ -142,6 +142,6 @@ class SystemStatus(db.Model):
         if not status:
             status = SystemStatus()
             db.session.add(status)
-        status.last_update = datetime.utcnow()
+        status.last_update = datetime.now(timezone.utc)
         db.session.commit()
         return status.last_update

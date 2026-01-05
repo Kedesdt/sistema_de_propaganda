@@ -269,3 +269,11 @@ def video_stats(video_id):
         video=stats["video"],
         logs=stats["visualizacoes"],
     )
+
+
+@admin_bp.route("/status")
+@admin_required
+def system_status():
+    """Exibe o status do sistema"""
+    status = SystemStatus.query.first()
+    return render_template("system_status.html", status=status)

@@ -1,5 +1,5 @@
 import os
-import sys
+
 
 # CRÍTICO: Limpar TODAS as variáveis PostgreSQL ANTES de qualquer import
 # Isso evita que psycopg2 leia arquivos de configuração com encoding errado
