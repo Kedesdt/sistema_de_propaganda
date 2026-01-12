@@ -50,7 +50,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from config import Config
 from models import db, SystemStatus
-from routes import main_bp, admin_bp, api_bp, cliente_bp
+from routes import main_bp, admin_bp, api_bp, cliente_bp, contato_bp
 import logging
 from logging.handlers import RotatingFileHandler
 import time
@@ -114,6 +114,7 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(api_bp)
     app.register_blueprint(cliente_bp)
+    app.register_blueprint(contato_bp)
 
     # Error Handlers
     @app.errorhandler(404)
